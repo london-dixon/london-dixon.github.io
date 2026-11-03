@@ -5,8 +5,8 @@ import { getMDXData, formatDate, type MDXDataItem } from "@/lib/mdx-utils";
  * 获取所有新闻数据
  * @returns {Array} 新闻数据对象数组
  */
-export function getNews(): MDXDataItem[] {
-  return getMDXData(path.join(process.cwd(), "data", "news"));
+export function getResearch(): MDXDataItem[] {
+  return getMDXData(path.join(process.cwd(), "data", "research_interests"));
 }
 
 // 导出格式化日期函数，方便组件直接使用
