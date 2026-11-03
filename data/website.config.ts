@@ -24,7 +24,9 @@ export interface NavigationItem {
 
 export interface HomepageSection {
   AboutSection?: boolean;
-  SelectedPublicationsSection?: boolean;
+  TeachingSection?: boolean;
+  ResearchSection?: boolean;
+  PublicationPresentationSection?: boolean;
 }
 
 export type FontStyle = "sans" | "serif" | "mono";
