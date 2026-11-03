@@ -55,6 +55,15 @@ export function parseFrontmatter(fileContent: string): ParsedFrontmatter {
 }
 
 /**
+ * 获取指定目录下的所有 MDX 文件
+ * @param {string} dir - 目录路径
+ * @returns {Array} MDX 文件名数组
+ */
+export function getMDXFiles(dir: string): string[] {
+  return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx');
+}
+
+/**
  * 读取 MDX 文件并解析其内容
  * @param {string} filePath - 文件路径
  * @returns {Object} 包含元数据和内容的对象
