@@ -23,30 +23,35 @@ export interface MDXDataItem {
  * @returns {Object} 包含元数据和内容的对象
  */
 export function parseFrontmatter(fileContent: string): ParsedFrontmatter {
-  let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-  let match = frontmatterRegex.exec(fileContent);
-  let frontMatterBlock = match![1];
-  let content = fileContent.replace(frontmatterRegex, '').trim();
-  let frontMatterLines = frontMatterBlock.trim().split('\n');
-  let metadata: FrontmatterMetadata = {};
+  const frontmatterRegex = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/;
+  const match = frontmatterRegex.exec(fileContent);
 
-  frontMatterLines.forEach((line) => {
-    let [key, ...valueArr] = line.split(': ');
-    let value = valueArr.join(': ').trim();
-    value = value.replace(/^['"](.*)['"]$/, '$1'); // Remove quotes
-    metadata[key.trim()] = value;
+  // If no frontmatter exists, return the content without metadata
+  if (!match) {
+    return {
+      metadata: {},
+      content: fileContent.trim(),
+    };
+  }
+
+  const frontMatterBlock = match[1];
+  const content = fileContent.replace(frontmatterRegex, '').trim();
+  const metadata: FrontmatterMetadata = {};
+
+  frontMatterBlock.split(/\r?\n/).forEach((line) => {
+    if (!line.trim()) return;
+
+    const separatorIndex = line.indexOf(':');
+    if (separatorIndex === -1) return;
+
+    const key = line.slice(0, separatorIndex).trim();
+    let value = line.slice(separatorIndex + 1).trim();
+
+    value = value.replace(/^['"]|['"]$/g, '');
+    metadata[key] = value;
   });
 
   return { metadata, content };
-}
-
-/**
- * 获取指定目录下的所有 MDX 文件
- * @param {string} dir - 目录路径
- * @returns {Array} MDX 文件名数组
- */
-export function getMDXFiles(dir: string): string[] {
-  return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx');
 }
 
 /**
